@@ -2,6 +2,7 @@ import {Button, Input, Layout, Text} from '@ui-kitten/components';
 import React from 'react';
 import {useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {MyIcon} from '../../components/ui/MyIcon';
 
 export const LoginScreen = () => {
   const {height} = useWindowDimensions();
@@ -10,48 +11,54 @@ export const LoginScreen = () => {
     <Layout style={{flex: 1}}>
       <ScrollView style={{marginHorizontal: 40}}>
         <Layout style={{paddingTop: height * 0.35}}>
-          <Text category="h1">Ingresar</Text>
-          <Text category="p2">Por favor, ingrese para continuar</Text>
+          <Text category="h1">Sign In</Text>
+          <Text category="p2">Please sign in to continue</Text>
         </Layout>
 
         {/* Inputs */}
         <Layout style={{marginTop: 20}}>
           <Input
-            placeholder="Correo electrónico"
+            placeholder="Email"
             keyboardType="email-address"
             autoCapitalize="none"
             style={{marginBottom: 10}}
+            accessoryLeft={<MyIcon name="mail-outline" />}
           />
           <Input
-            placeholder="Contraseña"
+            placeholder="Password"
             autoCapitalize="none"
             secureTextEntry
             style={{marginBottom: 10}}
+            accessoryLeft={<MyIcon name="lock-closed-outline" />}
           />
         </Layout>
 
         {/* Space */}
-        <Layout style={{height: 20}} />
+        <Layout style={{height: 10}} />
 
         <Layout>
-          <Button onPress={() => console.log('Login Pressed')}>Ingresar</Button>
+          <Button
+            accessoryRight={<MyIcon name="arrow-forward-outline" white />}
+            onPress={() => console.log('Login Pressed')}>
+            Sign In
+          </Button>
         </Layout>
 
         {/* Create account information */}
-        <Layout style={{height: 50}} />
+        <Layout style={{height: 20}} />
         <Layout
           style={{
             alignItems: 'flex-end',
             flexDirection: 'row',
             justifyContent: 'center',
           }}>
-          <Text>¿No tienes cuenta?</Text>
+          <Text>Don't have an account?</Text>
           <Text
             status="primary"
             category="s1"
-            onPress={() => console.log('Crea cuenta pressed')}>
+            onPress={() => console.log('Create account pressed')}>
             {' '}
-            Crea una
+            Create one
           </Text>
         </Layout>
       </ScrollView>
