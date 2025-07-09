@@ -1,7 +1,7 @@
 import '../gesture-handler';
 import * as eva from '@eva-design/eva';
-import {NavigationContainer} from '@react-navigation/native';
-import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {ApplicationProvider, IconRegistry, Layout} from '@ui-kitten/components';
 import React from 'react';
 import {useColorScheme} from 'react-native';
 import {StackNavigator} from './presentation/navigation/StackNavigator';
@@ -13,14 +13,32 @@ import {IonIconsPack} from './ion-icons';
 export const ProductsApp = () => {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? eva.dark : eva.light;
-
+  const backgroundColor =
+    colorScheme === 'dark'
+      ? theme['color-basic-800']
+      : theme['color-basic-100'];
   return (
     <>
       <IconRegistry icons={IonIconsPack} />
       <ApplicationProvider {...eva} theme={theme}>
-        <NavigationContainer>
-          <StackNavigator />
-        </NavigationContainer>
+        {/* Added Layout with the backgroundColor and theme prop in NavigationContainer to avoid "white flash" in dark mode when navigating */}
+        <Layout style={{flex: 1, backgroundColor}}>
+          <NavigationContainer
+            theme={{
+              dark: colorScheme === 'dark',
+              colors: {
+                primary: theme['color-primary-500'],
+                background: backgroundColor,
+                card: theme['color-basic-100'],
+                text: theme['text-basic-color'],
+                border: theme['color-basic-800'],
+                notification: theme['color-primary-500'],
+              },
+              fonts: DefaultTheme.fonts,
+            }}>
+            <StackNavigator />
+          </NavigationContainer>
+        </Layout>
       </ApplicationProvider>
     </>
   );
