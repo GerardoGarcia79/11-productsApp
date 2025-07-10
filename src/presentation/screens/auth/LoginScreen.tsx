@@ -1,19 +1,35 @@
 import {Button, Input, Layout, Text} from '@ui-kitten/components';
-import React from 'react';
-import {useWindowDimensions} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {MyIcon} from '../../components/ui/MyIcon';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParams} from '../../navigation/StackNavigator';
-import {API_URL, STAGE} from '@env';
+import {useAuthStore} from '../../store/auth/useAuthStore';
 
 interface Props extends StackScreenProps<RootStackParams, 'LoginScreen'> {}
 
 export const LoginScreen = ({navigation}: Props) => {
+  const {login} = useAuthStore();
+  const [isPosting, setIsPosting] = useState(false);
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
   const {height} = useWindowDimensions();
 
-  // TODO: Delete after testing
-  console.log({apiUrl: API_URL, stage: STAGE});
+  const onLogin = async () => {
+    if (form.email.length === 0 || form.password.length === 0) {
+      return;
+    }
+    setIsPosting(true);
+    const wasSuccessful = await login(form.email, form.password);
+    setIsPosting(false);
+    // eslint-disable-next-line curly
+    if (wasSuccessful) return;
+
+    Alert.alert('Error', 'Invalid email or password');
+  };
 
   return (
     <Layout style={{flex: 1}}>
@@ -29,12 +45,16 @@ export const LoginScreen = ({navigation}: Props) => {
             placeholder="Email"
             keyboardType="email-address"
             autoCapitalize="none"
+            value={form.email}
+            onChangeText={email => setForm({...form, email})}
             style={{marginBottom: 10}}
             accessoryLeft={<MyIcon name="mail-outline" />}
           />
           <Input
             placeholder="Password"
             autoCapitalize="none"
+            value={form.password}
+            onChangeText={password => setForm({...form, password})}
             secureTextEntry
             style={{marginBottom: 10}}
             accessoryLeft={<MyIcon name="lock-closed-outline" />}
@@ -46,8 +66,9 @@ export const LoginScreen = ({navigation}: Props) => {
 
         <Layout>
           <Button
+            disabled={isPosting}
             accessoryRight={<MyIcon name="arrow-forward-outline" white />}
-            onPress={() => console.log('Login Pressed')}>
+            onPress={onLogin}>
             Sign In
           </Button>
         </Layout>
