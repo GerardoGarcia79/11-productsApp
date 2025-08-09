@@ -1,7 +1,11 @@
 import {create} from 'zustand';
 import {User} from '../../../domain/entities/user';
 import {AuthStatus} from '../../../infrastructure/interfaces/auth.status';
-import {authCheckStatus, authLogin} from '../../../actions/auth/auth';
+import {
+  authCheckStatus,
+  authLogin,
+  authRegister,
+} from '../../../actions/auth/auth';
 import {StorageAdapter} from '../../../config/api/adapters/storage-adapter';
 
 export interface AuthState {
@@ -11,6 +15,11 @@ export interface AuthState {
   login: (email: string, password: string) => Promise<boolean>;
   checkStatus: () => Promise<void>;
   logout: () => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    fullName: string,
+  ) => Promise<boolean>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -49,5 +58,13 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   logout: async () => {
     await StorageAdapter.removeItem('token');
     set({status: 'unauthenticated', token: undefined, user: undefined});
+  },
+
+  register: async (email, password, fullName) => {
+    const response = await authRegister(email, password, fullName);
+    if (!response) {
+      return false;
+    }
+    return true;
   },
 }));
