@@ -6,6 +6,7 @@ import React from 'react';
 import {useColorScheme} from 'react-native';
 import {StackNavigator} from './presentation/navigation/StackNavigator';
 import {IonIconsPack} from './ion-icons';
+import {AuthProvider} from './presentation/providers/AuthProvider';
 
 // ApplicationProvider is used to provide the theme to the app
 // Is not recommended to implement different themes in a store app
@@ -36,7 +37,9 @@ export const ProductsApp = () => {
               },
               fonts: DefaultTheme.fonts,
             }}>
-            <StackNavigator />
+            <AuthProvider>
+              <StackNavigator />
+            </AuthProvider>
           </NavigationContainer>
         </Layout>
       </ApplicationProvider>
