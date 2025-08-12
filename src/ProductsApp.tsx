@@ -7,10 +7,15 @@ import {useColorScheme} from 'react-native';
 import {StackNavigator} from './presentation/navigation/StackNavigator';
 import {IonIconsPack} from './ion-icons';
 import {AuthProvider} from './presentation/providers/AuthProvider';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 // ApplicationProvider is used to provide the theme to the app
 // Is not recommended to implement different themes in a store app
 // But here is implemented to show how to use themes with ui-kitten
+
+// Create a client
+const queryClient = new QueryClient();
+
 export const ProductsApp = () => {
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? eva.dark : eva.light;
@@ -19,7 +24,8 @@ export const ProductsApp = () => {
       ? theme['color-basic-800']
       : theme['color-basic-100'];
   return (
-    <>
+    // Provide the client to your App
+    <QueryClientProvider client={queryClient}>
       <IconRegistry icons={IonIconsPack} />
       <ApplicationProvider {...eva} theme={theme}>
         {/* Added Layout with the backgroundColor and theme prop in NavigationContainer to avoid "white flash" in dark mode when navigating */}
@@ -43,6 +49,6 @@ export const ProductsApp = () => {
           </NavigationContainer>
         </Layout>
       </ApplicationProvider>
-    </>
+    </QueryClientProvider>
   );
 };
