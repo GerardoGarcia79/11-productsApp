@@ -1,10 +1,12 @@
-import {Layout, Text} from '@ui-kitten/components';
+import {Text} from '@ui-kitten/components';
 import React from 'react';
 import {getProductsByPage} from '../../../actions/auth/products/get-products-by-page';
 import {useQuery} from '@tanstack/react-query';
 import {Product} from '../../../domain/entities/product';
+import {MainLayout} from '../../layouts/MainLayout';
 
 export const HomeScreen = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {data: products = []} = useQuery<Promise<Product[]>>({
     queryKey: ['products', 'infinite'],
     staleTime: 1000 * 60 * 60, // 1 hour
@@ -12,15 +14,10 @@ export const HomeScreen = () => {
   });
 
   return (
-    <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>{JSON.stringify(products, null, 2)}</Text>
-
-      {/* Logout button */}
-      {/* <Button
-        onPress={logout}
-        accessoryLeft={<Icon name="log-out-outline" size={20} />}>
-        Cerrar sesión
-      </Button> */}
-    </Layout>
+    <MainLayout
+      title="TesloShop - Products"
+      subtitle="Administrative Application">
+      <Text>Hello World</Text>
+    </MainLayout>
   );
 };
